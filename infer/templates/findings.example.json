@@ -1,0 +1,26 @@
+{
+  "_comment": "示例（非真实案例输出）：infer.py 内部 findings 结构节选",
+  "case_id": "example",
+  "design": "k_group",
+  "alpha": 0.05,
+  "cleaning": {
+    "rows_raw": 150,
+    "exact_duplicates_removed": 1,
+    "rows_after_exact_dedup": 149,
+    "missing_tokens_per_column": {},
+    "note": "仅整行去重与缺失标记"
+  },
+  "comparisons": [
+    {
+      "outcome": "measurement",
+      "groups": {"A": {"n": 50, "mean": 1.0}, "B": {"n": 49, "mean": 2.0}},
+      "assumptions": {
+        "normality": {"A": {"method": "Shapiro-Wilk", "p": 0.12}},
+        "variance_homogeneity": {"method": "Levene(中位数)", "p": 0.31}
+      },
+      "tests": [{"method": "Kruskal-Wallis H 检验", "p": 1e-6, "role": "primary"}],
+      "effect_sizes": [{"name": "ε²", "value": 0.5, "magnitude": "大"}],
+      "posthoc": [{"a": "A", "b": "B", "p_holm": 1e-6, "significant_holm": true}]
+    }
+  ]
+}

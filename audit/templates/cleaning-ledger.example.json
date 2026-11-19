@@ -1,0 +1,76 @@
+{
+  "_comment": "示例 / EXAMPLE ONLY — 清洗账本结构示意，数字均为虚构，非真实案例输出",
+  "cleaning_ledger": [
+    {
+      "rule_id": "R001",
+      "type": "missing",
+      "scope": "example.csv",
+      "condition": "缺失标记(NA/N/A/NaN/null/None/-/./?/缺失)出现 7 个单元格",
+      "action": "report_and_exclude",
+      "default_action": "report_and_exclude",
+      "policy": "report_and_exclude",
+      "policy_source": "case.json",
+      "rows_affected": [],
+      "rows_affected_count": 0,
+      "before": "7 缺失单元格",
+      "after": "保留缺失, 下游按变量有效 n",
+      "note": ""
+    },
+    {
+      "rule_id": "R002",
+      "type": "duplicate",
+      "scope": "example.csv",
+      "condition": "整行完全重复(标准化后)",
+      "action": "drop",
+      "default_action": "drop",
+      "policy": "dedupe_exact_keep_first",
+      "policy_source": "default(约束缺失, 已记录)",
+      "rows_affected": [12, 57],
+      "rows_affected_count": 2,
+      "before": "200 行数据",
+      "after": "删除重复行 2 行(保留首次出现)",
+      "note": "近似重复组 1 个(3 位有效数字键)仅供人工核查"
+    },
+    {
+      "rule_id": "R003",
+      "type": "outlier",
+      "scope": "example.csv 列 strength",
+      "condition": "IQR 1.5×/3× 栅栏或 |modified z|>3.5 (极端 1, 温和 2, MAD 1)",
+      "action": "flag",
+      "default_action": "flag",
+      "rows_affected": [33, 101, 102],
+      "rows_affected_count": 3,
+      "before": "3 行被标记",
+      "after": "默认仅标记保留; 可 decide 覆盖为 keep/drop",
+      "note": "绝不静默删除异常值",
+      "override_reason": "（若 agent 执行 decide，此处记录理由）",
+      "decided_by": "auto"
+    },
+    {
+      "rule_id": "R004",
+      "type": "type_coercion",
+      "scope": "example.db::t 列 c3",
+      "condition": "SQLite 声明 TEXT 但 100.0% 可解析为数值",
+      "action": "coerce_on_read",
+      "default_action": "coerce_on_read",
+      "rows_affected": [],
+      "rows_affected_count": 0,
+      "before": "TEXT 存储数值",
+      "after": "读取时按数值解析",
+      "note": "导出陷阱: 数值以文本落库"
+    },
+    {
+      "rule_id": "R005",
+      "type": "unit",
+      "scope": "example.csv vs example.db::t 列 c5",
+      "condition": "跨源中位数比值 ≈ 1000",
+      "action": "flag",
+      "default_action": "flag",
+      "rows_affected": [],
+      "rows_affected_count": 0,
+      "before": "疑似量级不一致",
+      "after": "仅标记, 需确认单位口径",
+      "note": "中位数比值接近 1000 → 疑似单位/量级不一致"
+    }
+  ]
+}

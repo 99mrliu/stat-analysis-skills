@@ -1,0 +1,28 @@
+{
+  "_comment": "【示例】findings.json 的结构模板。数值全部为虚构示例，仅说明字段形状；inferential 字段必须由检验引擎诚实计算后填入。",
+  "outcome": "strength",
+  "group_variable": "age_group",
+  "alpha": 0.05,
+  "paired": false,
+  "group_summaries": {
+    "28d": {"n": 100, "mean": 36.5, "sd": 14.2, "median": 33.8, "q1": 26.2, "q3": 44.4, "missing": 0},
+    "90d": {"n": 54, "mean": 40.5, "sd": 9.8, "median": 39.7, "q1": 33.0, "q3": 47.8, "missing": 0}
+  },
+  "cleaning": {
+    "n_rows_raw": 1030,
+    "n_duplicates_removed": 25,
+    "n_rows_used": 1005,
+    "missing_by_column": {"slag": 3},
+    "source_files": [{"file": "concrete.csv", "sha256": "…"}],
+    "primary_source": "concrete.csv"
+  },
+  "method": "Welch t-test",
+  "statistic": -2.15,
+  "df": 96.4,
+  "p": 0.034,
+  "effect_size": {"name": "cohens_d", "value": -0.31, "ci95": [-0.60, -0.02]},
+  "multiplicity": {"method": "Holm", "adjusted_p": 0.068},
+  "assumptions": {"normality": "ok", "homoscedasticity": "violated", "focus": "means"},
+  "practically_important_difference": 5.0,
+  "limitations": ["龄期为观察性分组，不能推断因果。"]
+}
